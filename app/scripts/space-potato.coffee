@@ -51,6 +51,7 @@ class Potato extends createjs.Bitmap
   update: ->
     @x += @vx
     @y += @vy
+    @rotation++
     @wallHit()
 
   wallHit: ->

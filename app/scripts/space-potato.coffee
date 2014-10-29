@@ -13,7 +13,7 @@ class App
     @stage = new createjs.Stage selector
 
     @potatoes = []
-    @create 0, 0, 1
+    @create '/images/potato.png', 0, 0, 1
 
     createjs.Ticker.setFPS 24
     createjs.Ticker.addEventListener 'tick', @tick
@@ -23,8 +23,8 @@ class App
       potato.update()
     @stage.update()
 
-  create: (x, y, scale) ->
-    potato = new Potato '/images/potato.png', x, y, scale
+  create: (imgPath, x, y, scale) ->
+    potato = new Potato imgPath, x, y, scale
     @stage.addChild potato
     @potatoes.push potato
 
@@ -80,11 +80,11 @@ class Potato extends createjs.Bitmap
       @vy *= -1
 
   onClickPotato: =>
-    @clone()
+    @clone '/images/potato.png'
     @resize()
 
-  clone: ->
-    potato.app.create @x, @y, @scale
+  clone: (imgPath) ->
+    potato.app.create imgPath, @x, @y, @scale
 
   resize: ->
     @.scaleX = @scale

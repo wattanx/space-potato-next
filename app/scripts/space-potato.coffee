@@ -14,6 +14,8 @@ class App
     @$canvas.height = $(window).height()
     @stage = new createjs.Stage selector
 
+    @$potatoCount = $('[data-app=potatoCount]')
+
     @potatoes = []
     @create 0, 0, 1
 
@@ -21,6 +23,7 @@ class App
     createjs.Ticker.addEventListener 'tick', @tick
 
   tick: =>
+    @$potatoCount.html @potatoes.length
     for potato in @potatoes
       potato.update()
     @stage.update()
@@ -29,6 +32,7 @@ class App
     potato = new Potato POTATO_IMAGE_PATH, x, y, scale
     @stage.addChild potato
     @potatoes.push potato
+
 
 ###
 # @desc

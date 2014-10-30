@@ -1,10 +1,61 @@
-/*
-* Eric Meyer's Reset CSS v2.0 http://cssreset.com
-*/
+@charset "UTF-8";
 
-html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;font-size:100%;font:inherit;vertical-align:baseline;margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:none}table{border-collapse:collapse;border-spacing:0}
+$test: false !default;
+$img-path: "/static/img";
+$partner-color: #034397;
+$default-font-size: 13px;
+$default-line-height: 1.5;
 
-body {
+@import "../components/zenigame/src/zenigame";
+
+html, body {
+  @include size(100%);
+  @include typo($default-font-size, $light-black, 300, $default-line-height);
+  overflow: auto;
+  text-transform: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+//-------------------------------
+// Wrapper
+//-------------------------------
+
+.Wrapper {
+  @include clearfix;
+  @include size(100%);
+  @include pos(relative, 0, 0);
+  z-index: 0;
   background-image: url('/images/eso1006a.jpg');
   background-size: cover;
+}
+
+//-------------------------------
+// Container
+//-------------------------------
+
+.Container {
+  @include clearfix;
+  @include size(100%, auto);
+  &._Start {
+  }
+  &._Canvas {
+    @include pos(absolute, 0, 0);
+    z-index: 0;
+    height: 100%;
+  }
+}
+
+//-------------------------------
+// PotatoCounter
+//-------------------------------
+
+.PotatoCounter {
+  @include size(200px, 50px);
+  @include pos(absolute, 0, null, null, 0);
+  padding: 16px;
+  p {
+    @include typo_headline;
+    text-align: right;
+    color: $white;
+  }
 }

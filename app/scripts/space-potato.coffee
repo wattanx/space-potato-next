@@ -15,8 +15,10 @@ class App
     @stage = new createjs.Stage selector
 
     @$potatoCount = $('[data-app=potatoCount]')
+    @$potatoPoint = $('[data-app=potatoPoint]')
 
     @potatoes = []
+    @point = 0
     @create 0, 0, 1
 
     createjs.Ticker.setFPS 24
@@ -24,15 +26,30 @@ class App
 
   tick: =>
     @$potatoCount.html @potatoes.length
+    @$potatoPoint.html @point
     for potato in @potatoes
       potato.update()
     @stage.update()
 
   create: (x, y, scale) ->
+    @calcPoint scale
     potato = new Potato POTATO_IMAGE_PATH, x, y, scale
     @stage.addChild potato
     @potatoes.push potato
 
+  calcPoint: (scale) ->
+    @point += switch
+      when scale < .01 then 10240
+      when scale < .02 then 5120
+      when scale < .04 then 2560
+      when scale < .06 then 1280
+      when scale < .08 then 640
+      when scale < .1 then 320
+      when scale < .2 then 160
+      when scale < .4 then 80
+      when scale < .6 then 40
+      when scale < .9 then 20
+      else 0
 
 ###
 # @desc

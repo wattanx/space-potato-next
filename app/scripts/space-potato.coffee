@@ -1,5 +1,7 @@
 $ = jQuery
 
+POTATO_IMAGE_PATH = '/images/potato.png'
+
 ###
 # @desc
 # アプリケーションモデル
@@ -13,7 +15,7 @@ class App
     @stage = new createjs.Stage selector
 
     @potatoes = []
-    @create '/images/potato.png', 0, 0, 1
+    @create 0, 0, 1
 
     createjs.Ticker.setFPS 24
     createjs.Ticker.addEventListener 'tick', @tick
@@ -23,8 +25,8 @@ class App
       potato.update()
     @stage.update()
 
-  create: (imgPath, x, y, scale) ->
-    potato = new Potato imgPath, x, y, scale
+  create: (x, y, scale) ->
+    potato = new Potato POTATO_IMAGE_PATH, x, y, scale
     @stage.addChild potato
     @potatoes.push potato
 
@@ -81,11 +83,11 @@ class Potato extends createjs.Bitmap
       @vy *= -1
 
   onClickPotato: =>
-    @clone '/images/potato.png'
+    @clone()
     @resize()
 
-  clone: (imgPath) ->
-    potato.app.create imgPath, @x, @y, @scale
+  clone: ->
+    potato.app.create @x, @y, @scale
 
   resize: ->
     @.scaleX = @scale

@@ -14,13 +14,21 @@ class App
     @$canvas.height = $(window).height()
     @stage = new createjs.Stage selector
 
+    @$startView = $('[data-app=start]')
+    @$startContent = $('[data-app=startContent]')
+    @$startBtn = $('[data-app=startBtn]')
     @$potatoCount = $('[data-app=potatoCount]')
     @$potatoPoint = $('[data-app=potatoPoint]')
 
     @potatoes = []
     @point = 0
-    @create 0, 0, 1
 
+    @$startBtn.on 'click', @onClickStartBtn
+    @$startContent.css 'top', ($(window).height() - 400) / 2
+
+  onClickStartBtn: =>
+    @$startView.fadeOut 500
+    @create 0, 0, 1
     createjs.Ticker.setFPS 24
     createjs.Ticker.addEventListener 'tick', @tick
 

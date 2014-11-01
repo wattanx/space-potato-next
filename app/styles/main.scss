@@ -92,6 +92,8 @@ html, body {
 .PotatoCounter {
   @include size(200px, 50px);
   @include pos(absolute, 0, null, null, 0);
+  display: none;
+  z-index: 2;
   padding: 16px;
   p {
     @include typo_headline;

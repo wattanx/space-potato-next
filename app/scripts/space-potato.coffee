@@ -17,6 +17,8 @@ class App
     @$startView = $('[data-app=start]')
     @$startContent = $('[data-app=startContent]')
     @$startBtn = $('[data-app=startBtn]')
+
+    @$potatoCounter = $('[data-app=potatoCounter]')
     @$potatoCount = $('[data-app=potatoCount]')
     @$potatoPoint = $('[data-app=potatoPoint]')
 
@@ -28,6 +30,7 @@ class App
 
   onClickStartBtn: =>
     @$startView.fadeOut 500
+    @$potatoCounter.css 'display', 'block'
     @create 0, 0, 1
     createjs.Ticker.setFPS 24
     createjs.Ticker.addEventListener 'tick', @tick

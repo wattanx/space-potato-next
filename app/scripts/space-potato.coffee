@@ -1,6 +1,7 @@
 $ = jQuery
 
 POTATO_IMAGE_PATH = '/images/potato.png'
+POTATO_SIZE = 600
 
 ###
 # @desc
@@ -28,6 +29,10 @@ class App
     @$startBtn.on 'click', @onClickStartBtn
     @$startContent.css 'top', ($(window).height() - 400) / 2
 
+    if $(window).width() < 768
+      POTATO_IMAGE_PATH = '/images/potato-min.png'
+      POTATO_SIZE = 300
+
   onClickStartBtn: =>
     @$startView.fadeOut 500
     @$potatoCounter.css 'display', 'block'
@@ -44,7 +49,7 @@ class App
 
   create: (x, y, scale) ->
     @calcPoint scale
-    potato = new Potato POTATO_IMAGE_PATH, x, y, scale
+    potato = new Potato POTATO_IMAGE_PATH, POTATO_SIZE, x, y, scale
     @stage.addChild potato
     @potatoes.push potato
 
@@ -68,12 +73,12 @@ class App
 ###
 class Potato extends createjs.Bitmap
 
-  constructor: (args, x, y, scale) ->
+  constructor: (args, size, x, y, scale) ->
     @initialize args
     @scale = scale
-    @radius = 300
-    @regX = 300
-    @regY = 300
+    @radius = size / 2
+    @regX = size / 2
+    @regY = size / 2
     @distance = @radius + @scale
     @resize()
     @x = x

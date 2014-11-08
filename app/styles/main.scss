@@ -41,6 +41,7 @@ html, body {
     z-index: 2;
     height: 100%;
     background: rgba($black, .6);
+    overflow: hidden;
   }
   &._Canvas {
     @include pos(absolute, 0, 0);
@@ -54,13 +55,23 @@ html, body {
 //-------------------------------
 
 .StartContent {
-  @include size(1024px, 370px);
-  @include pos(relative, 0, 0);
+  @include size(100%, 400px);
+  @include pos(relative, 100%, 0);
+  max-width: 1000px;
+  transition-duration: 8s;
+  transition-property: top;
   margin: 0 auto;
   .title {
-    @include size(1000px, 50px);
-    margin: 0 0 120px 0;
+    @include size(96%, auto);
+    @include space(0, 0 auto 8% auto);
+    img { width: 100%; }
+  }
+  .subtitle {
+    @include typo_display2;
+    color: $white;
     text-align: center;
+    letter-spacing: 0.05em;
+    padding: 0 0 30px 0;
   }
   .startBtn {
     @include size(200px);

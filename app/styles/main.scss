@@ -65,18 +65,17 @@ html, body {
     float: left;
     img { width: 100%; }
   }
-  .FileUpload {
-    @include size(160px, auto);
-    padding: 16px;
+  .BtnGroup {
+    padding: 18px 0 16px 24px;
     float: left;
     .btn {
-      @include size(160px, 32px);
       @include pos(relative, 0, 0);
-      @include border(1px, solid, $white, $default-radius);
-      display: inline-block;
-      overflow: hidden;
       color: $white;
-      p {
+      display: inline-block;
+      background: none;
+      cursor: pointer;
+      &:hover { background: rgba($white, .3); }
+      .label {
         @include size(100%);
         line-height: 32px;
         text-align: center;

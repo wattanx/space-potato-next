@@ -59,29 +59,35 @@ html, body {
 //-------------------------------
 
 .Container._Header {
- .Title {
+  .Title {
     @include size(240px, auto);
     padding: 24px 0 0 24px;
     float: left;
     img { width: 100%; }
   }
   .FileUpload {
-    @include pos(relative, 16px, 16px);
-    @include border(1px, solid, $white, $default-radius);
+    @include size(160px, auto);
+    padding: 16px;
     float: left;
-    display: inline-block;
-    overflow: hidden;
-    color: $white;
-    p {
-      @include size(100%);
-      padding: 8px 16px;
-      cursor: pointer;
-    }
-    input[type="file"] {
-      @include size(100%);
-      @include pos(absolute, 0, 0);
-      opacity: 0;
-      cursor: pointer;
+    .btn {
+      @include size(160px, 32px);
+      @include pos(relative, 0, 0);
+      @include border(1px, solid, $white, $default-radius);
+      display: inline-block;
+      overflow: hidden;
+      color: $white;
+      p {
+        @include size(100%);
+        line-height: 32px;
+        text-align: center;
+        cursor: pointer;
+      }
+      input[type="file"] {
+        @include size(100%);
+        @include pos(absolute, 0, 0);
+        opacity: 0;
+        cursor: pointer;
+      }
     }
   }
   .Count {
@@ -93,5 +99,15 @@ html, body {
       text-align: right;
       color: $white;
     }
+  }
+}
+
+.Social {
+  @include pos(absolute, null, null, 0, 0);
+  padding: 16px;
+  float: left;
+  ul {
+    @include clearfix;
+    li { float: left; }
   }
 }

@@ -28,8 +28,10 @@
       <div class="Container _Header">
         <h1 class="Title"><img src="/images/logo.png" /></h1>
         <div class="FileUpload">
-          <p>独自の画像を使う</p>
-          <input type="file" accept="image/*" capture id="inputFile">
+          <div class="btn">
+            <p>独自の画像を使う</p>
+            <input type="file" accept="image/*" capture id="inputFile">
+          </div>
         </div>
         <div class="Count">
           <p><span data-app="potatoCount">1</span> POTATO</p>
@@ -38,6 +40,14 @@
 
       <div class="Container _Canvas">
         <canvas id="canvas" resize="true"></canvas>
+      </div>
+
+
+      <div class="Social">
+        <ul>
+          <li><a class="twitter-share-button" href="{{ page.url }}" data-text="SPACE POTATO" data-via="_ideyuta"></a></li>
+          <li><div class="fb-like" data-href="{{ page.url }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false" /></div></li>
+        </ul>
       </div>
 
     </div>
@@ -62,5 +72,30 @@
         <!-- build:js({app,.tmp}) scripts/main.js -->
         <script src="scripts/space-potato.js"></script>
         <!-- endbuild -->
+
+    <script>
+      !function(d,s,id){
+        var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+        if(!d.getElementById(id)){
+          js=d.createElement(s);
+          js.id=id;
+          js.src=p+'://platform.twitter.com/widgets.js';
+          fjs.parentNode.insertBefore(js,fjs);
+        }
+      }(document, 'script', 'twitter-wjs');
+    </script>
+
+    <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+
 </body>
 </html>

@@ -1,7 +1,7 @@
 $ = jQuery
 
-POTATO_IMAGE_PATH = '/images/potato.png'
-POTATO_SIZE = 600
+IMAGE_PATH = '/images/potato.png'
+SIZE = 600
 
 ###
 # @desc
@@ -14,58 +14,55 @@ class App
     @$canvas.width = $(window).width()
     @$canvas.height = $(window).height()
     @stage = new createjs.Stage selector
-
-    @$startView = $('[data-app=start]')
-    @$startContent = $('[data-app=startContent]')
-    @$startBtn = $('[data-app=startBtn]')
-
-    @$potatoCounter = $('[data-app=potatoCounter]')
-    @$potatoCount = $('[data-app=potatoCount]')
-    @$potatoPoint = $('[data-app=potatoPoint]')
+    createjs.Touch.enable @stage
 
     @potatoes = []
-    @point = 0
+    @$potatoCount = $('[data-app=potatoCount]')
 
-    @$startBtn.on 'click', @onClickStartBtn
-    @$startContent.css 'top', ($(window).height() - 400) / 2
+    @inputFile = document.querySelector('#inputFile')
+    @inputFile.addEventListener 'change', @changeImage
 
-    if $(window).width() < 768
-      POTATO_IMAGE_PATH = '/images/potato-min.png'
-      POTATO_SIZE = 300
-
-  onClickStartBtn: =>
-    @$startView.fadeOut 500
-    @$potatoCounter.css 'display', 'block'
-    @create 0, 0, 1
-    createjs.Ticker.setFPS 24
-    createjs.Ticker.addEventListener 'tick', @tick
+    @calcScale IMAGE_PATH, (scale) =>
+      @scale = scale
+      @create 0, 0, @scale
+      createjs.Ticker.setFPS 24
+      createjs.Ticker.addEventListener 'tick', @tick
 
   tick: =>
     @$potatoCount.html @potatoes.length
-    @$potatoPoint.html @point
     for potato in @potatoes
       potato.update()
     @stage.update()
 
   create: (x, y, scale) ->
-    @calcPoint scale
-    potato = new Potato POTATO_IMAGE_PATH, POTATO_SIZE, x, y, scale
-    @stage.addChild potato
-    @potatoes.push potato
+    potatoItem = new Potato IMAGE_PATH, SIZE, x, y, scale
+    @stage.addChild potatoItem
+    @potatoes.push potatoItem
 
-  calcPoint: (scale) ->
-    @point += switch
-      when scale < .01 then 10240
-      when scale < .02 then 5120
-      when scale < .04 then 2560
-      when scale < .06 then 1280
-      when scale < .08 then 640
-      when scale < .1 then 320
-      when scale < .2 then 160
-      when scale < .4 then 80
-      when scale < .6 then 40
-      when scale < .9 then 20
-      else 0
+  clearStage: ->
+    @stage.removeAllChildren()
+    @potatoes = []
+
+  calcScale: (imgPath, cb) ->
+    img = new Image()
+    img.src = imgPath
+    img.onload = ->
+      imgScale = 600 / Math.max(img.width, img.height)
+      scale = Math.min(1, $(window).width() / 1000) * imgScale
+      cb scale
+
+  changeImage: =>
+    file = @inputFile.files[0]
+    reader = new FileReader()
+    if file.type.match(/image.*/)
+      reader.readAsDataURL file
+      reader.onloadend = =>
+        console.log reader.result
+        IMAGE_PATH = reader.result
+        @calcScale reader.result, (scale) =>
+          @scale = scale
+          @clearStage()
+          @create 0, 0, @scale
 
 ###
 # @desc

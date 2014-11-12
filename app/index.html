@@ -25,20 +25,15 @@
 
     <div class="Wrapper">
 
-      <div class="Container _Start" data-app="start">
-        <div class="StartContent" data-app="startContent">
-          <h1 class="title">
-            <img src="/images/logo.png" />
-          </h1>
-          <div class="startBtn" data-app="startBtn">
-            <img class="thumb" src="/images/potato-btn.png" width="200" />
-          </div>
+      <div class="Container _Header">
+        <h1 class="Title"><img src="/images/logo.png" /></h1>
+        <div class="FileUpload">
+          <p>独自の画像を使う</p>
+          <input type="file" accept="image/*" capture id="inputFile">
         </div>
-      </div>
-
-      <div class="PotatoCounter" data-app="potatoCounter">
-        <p><span data-app="potatoCount">1</span> POTATO</p>
-        <p><span data-app="potatoPoint">0</span> POINT</p>
+        <div class="Count">
+          <p><span data-app="potatoCount">1</span> POTATO</p>
+        </div>
       </div>
 
       <div class="Container _Canvas">

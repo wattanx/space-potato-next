@@ -31,8 +31,6 @@ html, body {
   @include size(100%);
   @include pos(relative, 0, 0);
   z-index: 1;
-  background-image: url('/images/eso1006a.jpg');
-  background-size: cover;
 }
 
 //-------------------------------
@@ -100,6 +98,10 @@ html, body {
     }
   }
 }
+
+//-------------------------------
+// Social
+//-------------------------------
 
 .Social {
   @include pos(absolute, null, null, 0, 0);

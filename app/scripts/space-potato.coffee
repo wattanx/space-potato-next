@@ -1,6 +1,7 @@
 $ = jQuery
 
 IMAGE_PATH = '/images/potato.png'
+BG_IMAGE_PATH = '/images/eso1006a.jpg'
 SIZE = 600
 
 ###
@@ -14,19 +15,41 @@ class App
     @$canvas.width = $(window).width()
     @$canvas.height = $(window).height()
     @stage = new createjs.Stage selector
-    createjs.Touch.enable @stage
-
+    @setBgImg()
     @potatoes = []
     @$potatoCount = $('[data-app=potatoCount]')
-
     @inputFile = document.querySelector('#inputFile')
     @inputFile.addEventListener 'change', @changeImage
+    @$imgTweetBtn = $('[data-app=imgTweetBtn]')
+    @$imgTweetBtn.on 'click', @onClickImgTweetBtn
+    @$potatoTweet = $('[data-app=potatoTweet]')
+    @$potatoImg = $('[data-app=potatoImg]')
+    @$potatoTweetBtn = $('[data-app=potatoTweetBtn]')
 
     @calcScale IMAGE_PATH, (scale) =>
       @scale = scale
       @create 0, 0, @scale
       createjs.Ticker.setFPS 24
       createjs.Ticker.addEventListener 'tick', @tick
+
+    createjs.Touch.enable @stage
+
+  setBgImg: ->
+    img = new Image()
+    img.src = BG_IMAGE_PATH
+    @bgImg = new createjs.Bitmap BG_IMAGE_PATH
+    img.onload = =>
+      if @$canvas.width > @$canvas.height
+        scale = Math.max(@$canvas.width, @$canvas.height) / img.width
+        pos = (@$canvas.height - img.height * scale) / 2
+        @bgImg.y = pos
+      else
+        scale = Math.max(@$canvas.width, @$canvas.height) / img.height
+        pos = (@$canvas.width - img.width * scale) / 2
+        @bgImg.x = pos
+      @bgImg.scaleX = scale
+      @bgImg.scaleY = scale
+      @stage.addChild @bgImg
 
   tick: =>
     @$potatoCount.html @potatoes.length
@@ -57,12 +80,15 @@ class App
     if file.type.match(/image.*/)
       reader.readAsDataURL file
       reader.onloadend = =>
-        console.log reader.result
         IMAGE_PATH = reader.result
         @calcScale reader.result, (scale) =>
           @scale = scale
-          @clearStage()
+          @stage.addChild @bgImg
           @create 0, 0, @scale
+
+  onClickImgTweetBtn: =>
+    url = @stage.toDataURL 'image/png'
+    console.log url
 
 ###
 # @desc

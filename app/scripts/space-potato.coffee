@@ -16,7 +16,6 @@ class App
     @$canvas.height = $(window).height()
     @stage = new createjs.Stage selector
     @potatoes = []
-    @$potatoCount = $('[data-app=potatoCount]')
     @inputFile = document.querySelector('#inputFile')
     @$captureBtn = $('[data-app=captureBtn]')
     @$potatoTweet = $('[data-app=potatoTweet]')
@@ -61,7 +60,6 @@ class App
       do cb
 
   tick: =>
-    @$potatoCount.html @potatoes.length
     for potato in @potatoes
       potato.update()
     @stage.update()

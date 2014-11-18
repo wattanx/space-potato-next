@@ -27,12 +27,11 @@
 
       <div class="Container _Header">
         <h1 class="Title"><img src="/images/logo.png" /></h1>
-        <div class="BtnGroup h">
+        <div class="BtnGroup">
           <a class="btn r sm">
-            <p class="label">独自の画像を使う</p>
+            <p class="label">独自画像を使う</p>
             <input type="file" accept="image/*" capture id="inputFile">
           </a>
-          <a class="btn r sm" data-app="imgTweetBtn">画像をツイート</a>
         </div>
         <div class="Count">
           <p><span data-app="potatoCount">1</span> POTATO</p>
@@ -41,6 +40,43 @@
 
       <div class="Container _Canvas">
         <canvas id="canvas" resize="true"></canvas>
+      </div>
+
+      <div class="Modal _Share" data-app="shareModalView">
+        <div class="Confirm" data-app="confirm">
+          <div class="thumb" data-app="thumb"></div>
+          <div class="attention">
+            <p>ツイートする画像は<a href="">imgur</a>に公開されます。公開したくない場合は直接サムネイル画像をダウンロードするようにしてください。</p>
+            <button class="btn r md" data-app="tweetBtn">ツイート</button>
+          </div>
+        </div>
+        <div class="Loading" data-app="loading">
+          <div class="spinner">
+            <div class="spinner-container container1">
+              <div class="circle1"></div>
+              <div class="circle2"></div>
+              <div class="circle3"></div>
+              <div class="circle4"></div>
+            </div>
+            <div class="spinner-container container2">
+              <div class="circle1"></div>
+              <div class="circle2"></div>
+              <div class="circle3"></div>
+              <div class="circle4"></div>
+            </div>
+            <div class="spinner-container container3">
+              <div class="circle1"></div>
+              <div class="circle2"></div>
+              <div class="circle3"></div>
+              <div class="circle4"></div>
+            </div>
+          </div>
+          <p class="label">画像を書き出しています</p>
+        </div>
+      </div>
+
+      <div class="Capture">
+        <a class="btn" data-app="captureBtn">撮影</a>
       </div>
 
       <div class="Social">

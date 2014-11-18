@@ -15,26 +15,35 @@ class App
     @$canvas.width = $(window).width()
     @$canvas.height = $(window).height()
     @stage = new createjs.Stage selector
-    @setBgImg()
     @potatoes = []
     @$potatoCount = $('[data-app=potatoCount]')
     @inputFile = document.querySelector('#inputFile')
-    @inputFile.addEventListener 'change', @changeImage
-    @$imgTweetBtn = $('[data-app=imgTweetBtn]')
-    @$imgTweetBtn.on 'click', @onClickImgTweetBtn
+    @$captureBtn = $('[data-app=captureBtn]')
     @$potatoTweet = $('[data-app=potatoTweet]')
     @$potatoImg = $('[data-app=potatoImg]')
     @$potatoTweetBtn = $('[data-app=potatoTweetBtn]')
+    @$shareModalView = $('[data-app=shareModalView]')
+    @$confirm = $('[data-app=confirm]')
+    @$loading = $('[data-app=loading]')
+    @$thumb = $('[data-app=thumb]')
+    @$tweetBtn = $('[data-app=tweetBtn]')
 
-    @calcScale IMAGE_PATH, (scale) =>
-      @scale = scale
-      @create 0, 0, @scale
-      createjs.Ticker.setFPS 24
-      createjs.Ticker.addEventListener 'tick', @tick
+    @inputFile.addEventListener 'change', @changeImage
+    @$shareModalView.on 'click', @onClickShareModalView
+    @$captureBtn.on 'click', @onClickCaptureBtn
+    @$tweetBtn.on 'click', @onClickTweetBtn
+
+    @setBgImg () =>
+      @stage.addChild @bgImg
+      @calcScale IMAGE_PATH, (scale) =>
+        @scale = scale
+        @create 0, 0, @scale
+        createjs.Ticker.setFPS 24
+        createjs.Ticker.addEventListener 'tick', @tick
 
     createjs.Touch.enable @stage
 
-  setBgImg: ->
+  setBgImg: (cb) ->
     img = new Image()
     img.src = BG_IMAGE_PATH
     @bgImg = new createjs.Bitmap BG_IMAGE_PATH
@@ -49,7 +58,7 @@ class App
         @bgImg.x = pos
       @bgImg.scaleX = scale
       @bgImg.scaleY = scale
-      @stage.addChild @bgImg
+      do cb
 
   tick: =>
     @$potatoCount.html @potatoes.length
@@ -83,12 +92,56 @@ class App
         IMAGE_PATH = reader.result
         @calcScale reader.result, (scale) =>
           @scale = scale
+          @clearStage()
           @stage.addChild @bgImg
           @create 0, 0, @scale
 
-  onClickImgTweetBtn: =>
-    url = @stage.toDataURL 'image/png'
-    console.log url
+  onClickShareModalView: (e) =>
+    if e.target.className.split(' ')[0] == 'Modal'
+      @$shareModalView.fadeOut 200, =>
+        @$confirm.css 'display', 'block'
+        @$loading.css 'display', 'none'
+
+  onClickCaptureBtn: =>
+    @imgPath = @stage.toDataURL('image/jpg')
+    @blob @imgPath, (blob) =>
+      url = window.URL.createObjectURL blob
+      img = document.createElement 'img'
+      img.src = url
+      @$thumb.html img
+      @$confirm.css 'display', 'block'
+      @$shareModalView.fadeIn 100
+
+  blob: (base64, cb) =>
+    bin = atob(base64.replace(/^.*,/, ''))
+    buffer = new Uint8Array(bin.length)
+    for i in [0..bin.length]
+      buffer[i] = bin.charCodeAt(i)
+    blob = new Blob([buffer.buffer], { type: 'image/jpg' })
+    cb blob
+
+  onClickTweetBtn: =>
+    @$confirm.css 'display', 'none'
+    @$loading.fadeIn 100
+    img = @imgPath.split(',')[1]
+    @postImgur img, (url) =>
+      @postTwitter url
+
+  postImgur: (img, cb) ->
+    $.ajax 'https://api.imgur.com/3/image',
+      type: 'post'
+      headers: { Authorization: 'Client-ID eaef7ba9b34b1d1' }
+      data: { image: img }
+      dataType: 'json'
+      success: (response) ->
+        if response.success
+          cb response.data.link
+
+  postTwitter: (url) ->
+    @$shareModalView.css 'display', 'none'
+    @$loading.css 'display', 'none'
+    url = url.replace /.jpg/, ''
+    window.open 'https://twitter.com/intent/tweet?url='+url+'&text=potato%20http://space-potato.jp&hashtags=SpacePotato'
 
 ###
 # @desc

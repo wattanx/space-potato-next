@@ -141,7 +141,7 @@ class App
     @$shareModalView.css 'display', 'none'
     @$loading.css 'display', 'none'
     url = url.replace /.jpg/, ''
-    window.open 'https://twitter.com/intent/tweet?url='+url+'&text=potato%20http://space-potato.jp&hashtags=SpacePotato'
+    window.location = 'https://twitter.com/intent/tweet?url='+url+'&text=potato%20http://space-potato.jp&hashtags=SpacePotato'
 
 ###
 # @desc

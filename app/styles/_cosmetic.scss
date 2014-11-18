@@ -23,6 +23,7 @@
       @include clearfix;
       @include size(84%, auto);
       @include space(4%, 4% auto 0 auto);
+      @include border-radius($default-radius);
       background: $white;
       .thumb {
         width: 50%;

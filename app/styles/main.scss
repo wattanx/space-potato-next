@@ -11,7 +11,7 @@ $default-line-height: 1.5;
 html, body {
   @include size(100%);
   @include typo($default-font-size, $light-black, 300, $default-line-height);
-  overflow: auto;
+  overflow: hidden;
   text-transform: none;
   -webkit-text-size-adjust: 100%;
   user-select:none;
@@ -66,6 +66,12 @@ html, body {
   .BtnGroup {
     padding: 18px 0 16px 16px;
     float: left;
+    &.isImportFile {
+      .btn {
+        &.inputImgBtn { @include border-radius($default-radius 0 0 $default-radius); }
+        &.appShareBtn { display: inline-block; }
+      }
+    }
     .btn {
       @include pos(relative, 0, 0);
       color: $white;
@@ -73,6 +79,8 @@ html, body {
       background: none;
       cursor: pointer;
       &:hover { background: rgba($white, .3); }
+      &.inputImgBtn { @include border-radius($default-radius); }
+      &.appShareBtn { display: none; }
       .label {
         @include size(100%);
         line-height: 32px;
@@ -147,11 +155,17 @@ html, body {
 //-------------------------------
 
 .Modal._Share {
+  .view { display: none; }
+  .appview {
+    .Confirm {
+      .attention { width: 100%; }
+    }
+  }
   .Confirm {
     @include clearfix;
     @include size(592px, auto);
     @include space(24px, 0 auto);
-    @include border-radius($default-radius);
+    @include border-radius(0 0 $default-radius $default-radius);
     background: $white;
     .thumb {
       width: 376px;

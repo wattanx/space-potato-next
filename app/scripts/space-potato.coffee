@@ -2,7 +2,6 @@ $ = jQuery
 
 IMAGE_PATH = '/images/potato.png'
 BG_IMAGE_PATH = '/images/eso1006a.jpg'
-SIZE = 600
 
 ###
 # @desc
@@ -11,37 +10,100 @@ SIZE = 600
 class App
 
   constructor: (selector) ->
+
+    # 画像の設定
+    param = window.location.search
+    if param
+      params = @getParam param
+      if params['ver'] == 'achiku-potato'
+        getImgPath = '/images/apotato.png'
+      else
+        getImgPath = 'http://i.imgur.com/'+params['ver']+'.jpg'
+    @imgPath = getImgPath or IMAGE_PATH
+    @potatoes = []
+
+    # キャンバスの設定
     @$canvas = document.getElementById selector
     @$canvas.width = $(window).width()
     @$canvas.height = $(window).height()
     @stage = new createjs.Stage selector
-    @potatoes = []
+
+    @$navigation = $('[data-app=navigation]')
     @inputFile = document.querySelector('#inputFile')
-    @$captureBtn = $('[data-app=captureBtn]')
-    @$potatoTweet = $('[data-app=potatoTweet]')
-    @$potatoImg = $('[data-app=potatoImg]')
-    @$potatoTweetBtn = $('[data-app=potatoTweetBtn]')
+
+    # SHARE
     @$shareModalView = $('[data-app=shareModalView]')
-    @$confirm = $('[data-app=confirm]')
-    @$loading = $('[data-app=loading]')
+    @$appView = $('[data-app=appView]')
+    @$imgView = $('[data-app=imgView]')
+
+    # APP SHARE
+    @$appShareBtn = $('[data-app=appShareBtn]')
+    @$appTweetBtn = $('[data-app=appTweetBtn]')
+    @$appShareBtn.on 'click', @onClickAppShareBtn
+    @$appConfirm = @$appView.find('[data-app=confirm]')
+    @$appLoading = @$appView.find('[data-app=loading]')
+    @$appTweetBtn.on 'click', @onClickAppTweetBtn
+
+    # IMAGE SHARE
+    @$captureBtn = $('[data-app=captureBtn]')
+    @$imgConfirm = $('[data-app=imgConfirm]')
+    @$imgLoading = $('[data-app=imgLoading]')
     @$thumb = $('[data-app=thumb]')
-    @$tweetBtn = $('[data-app=tweetBtn]')
-
+    @$imgTweetBtn = $('[data-app=imgTweetBtn]')
     @inputFile.addEventListener 'change', @changeImage
-    @$shareModalView.on 'click', @onClickShareModalView
     @$captureBtn.on 'click', @onClickCaptureBtn
-    @$tweetBtn.on 'click', @onClickTweetBtn
+    @$shareModalView.on 'click', @onClickShareModalView
+    @$imgTweetBtn.on 'click', @onClickImgTweetBtn
 
-    @setBgImg () =>
-      @stage.addChild @bgImg
-      @calcScale IMAGE_PATH, (scale) =>
-        @scale = scale
-        @create 0, 0, @scale
-        createjs.Ticker.setFPS 24
-        createjs.Ticker.addEventListener 'tick', @tick
+    @loadImg @imgPath, (path) =>
+      @imgPath = path
+      @setBgImg () =>
+        @stage.addChild @bgImg
+        @calcScale @imgPath, (scale) =>
+          @scale = scale
+          @create 0, 0, @scale
+          createjs.Ticker.setFPS 24
+          createjs.Ticker.addEventListener 'tick', @tick
 
     createjs.Touch.enable @stage
 
+  #クロスドメイン画像をbase64に変換
+  loadImg: (imgUrl, cb) ->
+    xhr = new XMLHttpRequest()
+    xhr.open('GET', imgUrl, true)
+    xhr.responseType = 'arraybuffer'
+    xhr.onload = ->
+      bytes = new Uint8Array(@.response)
+      binaryData = ''
+      for i in [0..bytes.byteLength]
+        binaryData += String.fromCharCode(bytes[i])
+      bytes = new Uint8Array(@.response)
+      if (bytes[0] == 0xff && bytes[1] == 0xd8 && bytes[bytes.byteLength-2] == 0xff && bytes[bytes.byteLength-1] == 0xd9)
+        imgSrc = 'data:image/jpeg;base64,'
+      else if (bytes[0] == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4e && bytes[3] == 0x47)
+        imgSrc = 'data:image/png;base64,'
+      else if (bytes[0] == 0x47 && bytes[1] == 0x49 && bytes[2] == 0x46 && bytes[3] == 0x38)
+        imgSrc = 'data:image/gif;base64,'
+      else if (bytes[0] == 0x42 && bytes[1] == 0x4d)
+        imgSrc = 'data:image/bmp;base64,'
+      else
+        imgSrc = 'data:image/unknown;base64,'
+      path = imgSrc + window.btoa binaryData
+      cb path
+    xhr.send()
+
+  # URLのパース処理
+  getParam: (url) ->
+    parameters = url.split('?')
+    params = parameters[1].split('&')
+    paramsArray = []
+    for i in [0...params.length]
+      val = params[i].split('=')
+      paramsArray.push(val[0])
+      paramsArray[val[0]] = val[1]
+    return paramsArray
+
+  # 背景画像の設定
   setBgImg: (cb) ->
     img = new Image()
     img.src = BG_IMAGE_PATH
@@ -65,7 +127,7 @@ class App
     @stage.update()
 
   create: (x, y, scale) ->
-    potatoItem = new Potato IMAGE_PATH, SIZE, x, y, scale
+    potatoItem = new Potato @imgPath, 600, x, y, scale
     @stage.addChild potatoItem
     @potatoes.push potatoItem
 
@@ -87,44 +149,65 @@ class App
     if file.type.match(/image.*/)
       reader.readAsDataURL file
       reader.onloadend = =>
-        IMAGE_PATH = reader.result
+        @$navigation.addClass 'isImportFile'
+        @imgPath = reader.result
         @calcScale reader.result, (scale) =>
           @scale = scale
           @clearStage()
           @stage.addChild @bgImg
           @create 0, 0, @scale
 
+  ##
+  # SHARE
+  ##
   onClickShareModalView: (e) =>
     if e.target.className.split(' ')[0] == 'Modal'
       @$shareModalView.fadeOut 200, =>
-        @$confirm.css 'display', 'block'
-        @$loading.css 'display', 'none'
+        @$appView.css 'display', 'none'
+        @$appConfirm.css 'display', 'block'
+        @$appLoading.css 'display', 'none'
+        @$imgView.css 'display', 'none'
+        @$imgConfirm.css 'display', 'block'
+        @$imgLoading.css 'display', 'none'
 
+  # APP SHARE
+  onClickAppShareBtn: =>
+    @$appView.css 'display', 'block'
+    @$appConfirm.css 'display', 'block'
+    @$shareModalView.fadeIn 100
+
+  onClickAppTweetBtn: =>
+    @$appConfirm.css 'display', 'none'
+    @$appLoading.fadeIn 100
+    img = @imgPath.split(',')[1]
+    @postImgur img, (url) =>
+      path = url.replace 'http://i.imgur.com/', ''
+      hash = path.split('.')[0]
+      window.location = 'https://twitter.com/intent/tweet?url=http://ideyuta.github.io/space-potato/?ver='+hash+'&hashtags=SpacePotato'
+
+  # IMAGE SHARE
   onClickCaptureBtn: =>
-    @imgPath = @stage.toDataURL('image/jpg')
-    @blob @imgPath, (blob) =>
+    @exportImgPath = @stage.toDataURL('image/jpg')
+    @blob @exportImgPath, (blob) =>
       url = window.URL.createObjectURL blob
       img = document.createElement 'img'
       img.src = url
       @$thumb.html img
-      @$confirm.css 'display', 'block'
+      @$imgView.css 'display', 'block'
+      @$imgConfirm.css 'display', 'block'
       @$shareModalView.fadeIn 100
 
-  blob: (base64, cb) =>
-    bin = atob(base64.replace(/^.*,/, ''))
-    buffer = new Uint8Array(bin.length)
-    for i in [0..bin.length]
-      buffer[i] = bin.charCodeAt(i)
-    blob = new Blob([buffer.buffer], { type: 'image/jpg' })
-    cb blob
-
-  onClickTweetBtn: =>
-    @$confirm.css 'display', 'none'
-    @$loading.fadeIn 100
-    img = @imgPath.split(',')[1]
+  onClickImgTweetBtn: =>
+    @$imgConfirm.css 'display', 'none'
+    @$imgLoading.fadeIn 100
+    img = @exportImgPath.split(',')[1]
     @postImgur img, (url) =>
-      @postTwitter url
+      @$shareModalView.css 'display', 'none'
+      @$imgLoading.css 'display', 'none'
+      url = url.replace /.jpg/, ''
+      window.location = 'https://twitter.com/intent/tweet?url='+url+'&text=potato%20http://space-potato.jp&hashtags=SpacePotato'
 
+  # imgurへ画像を投稿してURLを返す
   postImgur: (img, cb) ->
     $.ajax 'https://api.imgur.com/3/image',
       type: 'post'
@@ -135,11 +218,13 @@ class App
         if response.success
           cb response.data.link
 
-  postTwitter: (url) ->
-    @$shareModalView.css 'display', 'none'
-    @$loading.css 'display', 'none'
-    url = url.replace /.jpg/, ''
-    window.location = 'https://twitter.com/intent/tweet?url='+url+'&text=potato%20http://space-potato.jp&hashtags=SpacePotato'
+  blob: (base64, cb) =>
+    bin = atob(base64.replace(/^.*,/, ''))
+    buffer = new Uint8Array(bin.length)
+    for i in [0..bin.length]
+      buffer[i] = bin.charCodeAt(i)
+    blob = new Blob([buffer.buffer], { type: 'image/jpg' })
+    cb blob
 
 ###
 # @desc
@@ -160,6 +245,9 @@ class Potato extends createjs.Bitmap
     @vx = Math.floor(Math.random() * 16) + 1
     @vy = Math.floor(Math.random() * 8) + 1
     @.addEventListener 'click', @onClickPotato
+    hitObject = new createjs.Shape()
+    hitObject .graphics.beginFill("#000000").drawRect(0, 0, size, size)
+    @hitArea = hitObject
 
   update: ->
     @x += @vx

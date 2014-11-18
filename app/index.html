@@ -27,10 +27,13 @@
 
       <div class="Container _Header">
         <h1 class="Title"><img src="/images/logo.png" /></h1>
-        <div class="BtnGroup">
-          <a class="btn r sm">
-            <p class="label">他の画像</p>
+        <div class="BtnGroup h" data-app="navigation">
+          <a class="btn r sm inputImgBtn">
+            <p class="label">他の画像を選択</p>
             <input type="file" accept="image/*" capture id="inputFile">
+          </a>
+          <a class="btn r sm appShareBtn" data-app="appShareBtn">
+            <p class="label">この画像でアプリを共有</p>
           </a>
         </div>
       </div>
@@ -40,36 +43,70 @@
       </div>
 
       <div class="Modal _Share" data-app="shareModalView">
-        <div class="Confirm" data-app="confirm">
-          <div class="thumb" data-app="thumb"></div>
-          <div class="attention">
-            <p>ツイートする画像は<a href="http://imgur.com/">imgur</a>に公開されます。公開したくない場合は直接サムネイル画像をダウンロードするようにしてください。</p>
-            <button class="btn r md" data-app="tweetBtn">ツイート</button>
+        <div class="view" data-app="appView">
+          <div class="Confirm" data-app="confirm">
+            <div class="attention">
+              <p>他の人がこの画像で遊べるようにするためには、この画像を<a href="http://imgur.com/">imgur</a>に公開する必要があります。問題なければツイートボタンを押してください。</p>
+              <button class="btn r md" data-app="appTweetBtn">ツイート</button>
+            </div>
           </div>
+          <div class="Loading" data-app="loading">
+            <div class="spinner">
+              <div class="spinner-container container1">
+                <div class="circle1"></div>
+                <div class="circle2"></div>
+                <div class="circle3"></div>
+                <div class="circle4"></div>
+              </div>
+              <div class="spinner-container container2">
+                <div class="circle1"></div>
+                <div class="circle2"></div>
+                <div class="circle3"></div>
+                <div class="circle4"></div>
+              </div>
+              <div class="spinner-container container3">
+                <div class="circle1"></div>
+                <div class="circle2"></div>
+                <div class="circle3"></div>
+                <div class="circle4"></div>
+              </div>
+            </div>
+            <p class="label">アプリケーションを作成しています。<br />作成終了後ツイート画面に遷移します。</p>
+          </div>
+
         </div>
-        <div class="Loading" data-app="loading">
-          <div class="spinner">
-            <div class="spinner-container container1">
-              <div class="circle1"></div>
-              <div class="circle2"></div>
-              <div class="circle3"></div>
-              <div class="circle4"></div>
-            </div>
-            <div class="spinner-container container2">
-              <div class="circle1"></div>
-              <div class="circle2"></div>
-              <div class="circle3"></div>
-              <div class="circle4"></div>
-            </div>
-            <div class="spinner-container container3">
-              <div class="circle1"></div>
-              <div class="circle2"></div>
-              <div class="circle3"></div>
-              <div class="circle4"></div>
+        <div class="view" data-app="imgView">
+          <div class="Confirm" data-app="confirm">
+            <div class="thumb" data-app="thumb"></div>
+            <div class="attention">
+              <p>ツイートする画像は<a href="http://imgur.com/">imgur</a>に公開されます。公開したくない場合は直接サムネイル画像をダウンロードするようにしてください。</p>
+              <button class="btn r md" data-app="imgTweetBtn">ツイート</button>
             </div>
           </div>
-          <p class="label">画像を書き出しています。<br
-          />書き出し終了後ツイート画面に遷移します。</p>
+          <div class="Loading" data-app="imgLoading">
+            <div class="spinner">
+              <div class="spinner-container container1">
+                <div class="circle1"></div>
+                <div class="circle2"></div>
+                <div class="circle3"></div>
+                <div class="circle4"></div>
+              </div>
+              <div class="spinner-container container2">
+                <div class="circle1"></div>
+                <div class="circle2"></div>
+                <div class="circle3"></div>
+                <div class="circle4"></div>
+              </div>
+              <div class="spinner-container container3">
+                <div class="circle1"></div>
+                <div class="circle2"></div>
+                <div class="circle3"></div>
+                <div class="circle4"></div>
+              </div>
+            </div>
+            <p class="label">画像を書き出しています。<br
+            />書き出し終了後ツイート画面に遷移します。</p>
+          </div>
         </div>
       </div>
 

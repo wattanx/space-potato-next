@@ -6,9 +6,9 @@
 
   $ = jQuery;
 
-  IMAGE_PATH = '/images/potato.png';
+  IMAGE_PATH = 'images/potato.png';
 
-  BG_IMAGE_PATH = '/images/eso1006a.jpg';
+  BG_IMAGE_PATH = 'images/eso1006a.jpg';
 
 
   /*

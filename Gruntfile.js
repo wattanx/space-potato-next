@@ -432,9 +432,7 @@ module.exports = function (grunt) {
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
-    'copy:dist',
-    'usemin',
-    'htmlmin'
+    'copy:dist'
   ]);
 
   grunt.registerTask('default', [

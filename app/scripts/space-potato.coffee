@@ -1,7 +1,7 @@
 $ = jQuery
 
-IMAGE_PATH = '/images/potato.png'
-BG_IMAGE_PATH = '/images/eso1006a.jpg'
+IMAGE_PATH = 'images/potato.png'
+BG_IMAGE_PATH = 'images/eso1006a.jpg'
 
 ###
 # @desc

@@ -433,7 +433,6 @@ module.exports = function (grunt) {
     'concurrent:dist',
     'autoprefixer',
     'copy:dist',
-    'rev',
     'usemin',
     'htmlmin'
   ]);

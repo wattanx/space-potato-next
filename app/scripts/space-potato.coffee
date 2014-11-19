@@ -224,7 +224,7 @@ class App
     @postImgur img, (url) =>
       path = url.replace 'http://i.imgur.com/', ''
       hash = path.split('.')[0]
-      window.location = 'https://twitter.com/intent/tweet?url=http://ideyuta.github.io/space-potato/?ver='+hash+'&hashtags=SpacePotato'
+      window.location = 'https://twitter.com/intent/tweet?url=http://ideyuta.github.io/space-potato/?ver='+hash+'&via=_space_potato'
 
   # IMAGE SHARE
   onClickCaptureBtn: =>
@@ -246,7 +246,7 @@ class App
       @$shareModalView.css 'display', 'none'
       @$imgLoading.css 'display', 'none'
       url = url.replace /.jpg/, ''
-      window.location = 'https://twitter.com/intent/tweet?url='+url+'&text=potato%20http://space-potato.jp&hashtags=SpacePotato'
+      window.location = 'https://twitter.com/intent/tweet?url='+url+'&text=Space%20Potato%20http://ideyuta.github.io/space-potato/&via=_space_potato'
 
   # imgurへ画像を投稿してURLを返す
   postImgur: (img, cb) ->

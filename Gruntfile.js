@@ -125,7 +125,7 @@ module.exports = function (grunt) {
           expand: true,
           cwd: '<%= config.app %>/scripts',
           src: ['*.coffee'],
-          dest: '.tmp/scripts',
+          dest: '<%= config.dist %>/scripts',
           ext: '.js'
         }]
       },
@@ -174,7 +174,7 @@ module.exports = function (grunt) {
           expand: true,
           cwd: '<%= config.app %>/styles',
           src: ['*.{scss,sass}'],
-          dest: '.tmp/styles',
+          dest: '<%= config.dist %>/styles',
           ext: '.css'
         }]
       },
@@ -342,6 +342,9 @@ module.exports = function (grunt) {
         }, {
           src: 'node_modules/apache-server-configs/dist/.htaccess',
           dest: '<%= config.dist %>/.htaccess'
+        }, {
+          src: 'bower_components/*/{,*/}*.*',
+          dest: '<%= config.dist %>/'
         }]
       },
       styles: {
@@ -423,6 +426,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'coffee',
+    'sass',
     'wiredep',
     'useminPrepare',
     'concurrent:dist',

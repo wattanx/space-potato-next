@@ -55,16 +55,16 @@ class App
     @$shareModalView.on 'click', @onClickShareModalView
     @$imgTweetBtn.on 'click', @onClickImgTweetBtn
 
-    @loadImg @imgPath, (path) =>
-      @imgPath = path
-      @setBgImg () =>
-        @stage.addChild @bgImg
+    @setBgImg () =>
+      @stage.addChild @bgImg
+      @loadImg @imgPath, (path) =>
+        @imgPath = path
         @calcScale @imgPath, (data) =>
           @scale = data[0]
           @create 0, 0, data[1], data[2], @scale
-          createjs.Ticker.setFPS 24
-          createjs.Ticker.addEventListener 'tick', @tick
 
+    createjs.Ticker.setFPS 24
+    createjs.Ticker.addEventListener 'tick', @tick
     createjs.Touch.enable @stage
 
   #クロスドメイン画像をbase64に変換

@@ -59,9 +59,9 @@ class App
       @imgPath = path
       @setBgImg () =>
         @stage.addChild @bgImg
-        @calcScale @imgPath, (scale) =>
-          @scale = scale
-          @create 0, 0, @scale
+        @calcScale @imgPath, (data) =>
+          @scale = data[0]
+          @create 0, 0, data[1], data[2], @scale
           createjs.Ticker.setFPS 24
           createjs.Ticker.addEventListener 'tick', @tick
 
@@ -126,8 +126,8 @@ class App
       potato.update()
     @stage.update()
 
-  create: (x, y, scale) ->
-    potatoItem = new Potato @imgPath, 600, x, y, scale
+  create: (x, y, w, h, scale) ->
+    potatoItem = new Potato @imgPath, x, y, w, h, scale
     @stage.addChild potatoItem
     @potatoes.push potatoItem
 
@@ -141,7 +141,7 @@ class App
     img.onload = ->
       imgScale = 600 / Math.max(img.width, img.height)
       scale = Math.min(1, $(window).width() / 1000) * imgScale
-      cb scale
+      cb [scale, img.width, img.height]
 
   changeImage: =>
     file = @inputFile.files[0]
@@ -151,11 +151,11 @@ class App
       reader.onloadend = =>
         @$navigation.addClass 'isImportFile'
         @imgPath = reader.result
-        @calcScale reader.result, (scale) =>
-          @scale = scale
+        @calcScale reader.result, (data) =>
+          @scale = data[0]
           @clearStage()
           @stage.addChild @bgImg
-          @create 0, 0, @scale
+          @create 0, 0, data[1], data[2], @scale
 
   ##
   # SHARE
@@ -232,21 +232,23 @@ class App
 ###
 class Potato extends createjs.Bitmap
 
-  constructor: (args, size, x, y, scale) ->
+  constructor: (args, x, y, w, h, scale) ->
     @initialize args
     @scale = scale
-    @radius = size / 2
-    @regX = size / 2
-    @regY = size / 2
+    @radius = Math.max(w, h) * scale / 2
+    @regX = w * scale / 2
+    @regY = h * scale / 2
     @distance = @radius + @scale
     @resize()
     @x = x
     @y = y
+    @w = w
+    @h = h
     @vx = Math.floor(Math.random() * 16) + 1
     @vy = Math.floor(Math.random() * 8) + 1
     @.addEventListener 'click', @onClickPotato
     hitObject = new createjs.Shape()
-    hitObject .graphics.beginFill("#000000").drawRect(0, 0, size, size)
+    hitObject .graphics.beginFill("#000000").drawRect(0, 0, w, h)
     @hitArea = hitObject
 
   update: ->
@@ -286,7 +288,7 @@ class Potato extends createjs.Bitmap
     @resize()
 
   clone: ->
-    potato.app.create @x, @y, @scale
+    potato.app.create @x, @y, @w, @h, @scale
 
   resize: ->
     @.scaleX = @scale

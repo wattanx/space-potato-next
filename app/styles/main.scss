@@ -150,7 +150,6 @@ html, body {
   @include size(100%);
   @include pos(absolute, 0, 0);
   &._Share {
-    display: none;
     background: rgba($black, .8);
     z-index: 100;
   }
@@ -162,6 +161,10 @@ html, body {
 
 .Modal._Share {
   .view { display: none; }
+  ._loadView {
+    display: block;
+    .Loading { display: block; }
+  }
   ._appView {
     .Confirm {
       .attention { width: 100%; }
@@ -207,5 +210,5 @@ html, body {
   }
 }
 
-@import 'spinner';
+@import 'loader';
 @import 'cosmetic';

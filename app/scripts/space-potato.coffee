@@ -11,15 +11,6 @@ class App
 
   constructor: (selector) ->
 
-    # 画像の設定
-    param = window.location.search
-    if param
-      params = @getParam param
-      if params['ver'] == 'achiku-potato'
-        getImgPath = '/images/apotato.png'
-      else
-        getImgPath = 'http://i.imgur.com/'+params['ver']+'.jpg'
-    @imgPath = getImgPath or IMAGE_PATH
     @potatoes = []
 
     # キャンバスの設定
@@ -33,6 +24,7 @@ class App
 
     # SHARE
     @$shareModalView = $('[data-app=shareModalView]')
+    @$loadView = $('[data-app=loadView]')
     @$appView = $('[data-app=appView]')
     @$imgView = $('[data-app=imgView]')
 
@@ -46,8 +38,8 @@ class App
 
     # IMAGE SHARE
     @$captureBtn = $('[data-app=captureBtn]')
-    @$imgConfirm = $('[data-app=imgConfirm]')
-    @$imgLoading = $('[data-app=imgLoading]')
+    @$imgConfirm = @$imgView.find('[data-app=confirm]')
+    @$imgLoading = @$imgView.find('[data-app=loading]')
     @$thumb = $('[data-app=thumb]')
     @$imgTweetBtn = $('[data-app=imgTweetBtn]')
     @inputFile.addEventListener 'change', @changeImage
@@ -57,18 +49,59 @@ class App
 
     @setBgImg () =>
       @stage.addChild @bgImg
-      @loadImg @imgPath, (path) =>
-        @imgPath = path
-        @calcScale @imgPath, (data) =>
-          @scale = data[0]
-          @create 0, 0, data[1], data[2], @scale
+      # 画像の設定
+      param = window.location.search
+      if param
+        @checkParam param, (path) =>
+          if path
+            @transBase64 path, (base64) =>
+              @imgPath = base64
+              @start()
+          else
+            @imgPath = IMAGE_PATH
+            @start()
+      else
+        @imgPath = IMAGE_PATH
+        @start()
 
     createjs.Ticker.setFPS 24
     createjs.Ticker.addEventListener 'tick', @tick
     createjs.Touch.enable @stage
 
-  #クロスドメイン画像をbase64に変換
-  loadImg: (imgUrl, cb) ->
+  # スタート
+  start: ->
+    @calcScale @imgPath, (data) =>
+      @scale = data[0]
+      @create 0, 0, data[1], data[2], @scale
+      @$shareModalView.fadeOut 100
+      @$loadView.css 'display', 'none'
+
+  # URLパラメータをチェック
+  checkParam: (param, cb) =>
+    params = @getParam param
+    if params['ver'] == 'achiku-potato'
+      cb @imgPath = '/images/apotato.png'
+    else
+      @getImgur params['ver'], (path) ->
+        if path != null
+          cb @imgPath = path
+        else
+          cb @imgPath = IMAGE_PATH
+
+  # imgurから画像を取得
+  getImgur: (id, cb) ->
+    $.ajax 'https://api.imgur.com/3/image/'+id,
+      type: 'get'
+      headers: { Authorization: 'Client-ID eaef7ba9b34b1d1' }
+      dataType: 'json'
+      success: (response) ->
+        if response.success
+          cb response.data.link
+      error: (response) ->
+        do cb
+
+  #クロスドメイン画像を取得しbase64に変換
+  transBase64: (imgUrl, cb) ->
     xhr = new XMLHttpRequest()
     xhr.open('GET', imgUrl, true)
     xhr.responseType = 'arraybuffer'
@@ -126,23 +159,31 @@ class App
       potato.update()
     @stage.update()
 
+  # ポテト生成
   create: (x, y, w, h, scale) ->
     potatoItem = new Potato @imgPath, x, y, w, h, scale
     @stage.addChild potatoItem
     @potatoes.push potatoItem
 
+  # ステージをクリア
   clearStage: ->
     @stage.removeAllChildren()
     @potatoes = []
 
+  # ポテトサイズを計算
   calcScale: (imgPath, cb) ->
     img = new Image()
     img.src = imgPath
     img.onload = ->
-      imgScale = 600 / Math.max(img.width, img.height)
+      maxSize = Math.max(img.width, img.height)
+      if maxSize <= 600
+        imgScale = maxSize / 600
+      else
+        imgScale = 600 / Math.max(img.width, img.height)
       scale = Math.min(1, $(window).width() / 1000) * imgScale
       cb [scale, img.width, img.height]
 
+  # 画像を変更
   changeImage: =>
     file = @inputFile.files[0]
     reader = new FileReader()

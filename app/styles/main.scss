@@ -80,7 +80,11 @@ html, body {
       cursor: pointer;
       &:hover { background: rgba($white, .3); }
       &.inputImgBtn { @include border-radius($default-radius); }
-      &.appShareBtn { display: none; }
+      &.appShareBtn {
+        display: none;
+        background: $blue;
+        &:hover { background: darken($blue, 8%); }
+      }
       .label {
         @include size(100%);
         line-height: 32px;
@@ -114,7 +118,9 @@ html, body {
     text-align: center;
     cursor: pointer;
     &:hover {
-      background: rgba($white, .2);
+      border-color: $red;
+      color: $red;
+      background: rgba($white, .1);
     }
   }
 }

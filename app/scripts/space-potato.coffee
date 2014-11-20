@@ -252,7 +252,7 @@ class App
       @$shareModalView.css 'display', 'none'
       @$imgLoading.css 'display', 'none'
       url = url.replace /.jpg/, ''
-      window.location = 'https://twitter.com/intent/tweet?url='+url+'&text=Space%20Potato%20http://ideyuta.com/space-potato/&via=_space_potato'
+      window.location = 'https://twitter.com/intent/tweet?url='+url+'&text=Space%20Potato%20http://ideyuta.com/space-potato/'+window.location.search+'&via=_space_potato'
 
   # imgurへ画像を投稿してURLを返す
   postImgur: (img, cb) ->

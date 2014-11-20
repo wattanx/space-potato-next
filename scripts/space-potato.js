@@ -322,7 +322,7 @@
           _this.$shareModalView.css('display', 'none');
           _this.$imgLoading.css('display', 'none');
           url = url.replace(/.jpg/, '');
-          return window.location = 'https://twitter.com/intent/tweet?url=' + url + '&text=Space%20Potato%20http://ideyuta.com/space-potato/&via=_space_potato';
+          return window.location = 'https://twitter.com/intent/tweet?url=' + url + '&text=Space%20Potato%20http://ideyuta.com/space-potato/' + window.location.search + '&via=_space_potato';
         };
       })(this));
     };

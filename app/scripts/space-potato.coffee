@@ -80,7 +80,7 @@ class App
   checkParam: (param, cb) =>
     params = @getParam param
     if params['ver'] == 'achiku-potato'
-      cb @imgPath = '/images/apotato.png'
+      cb @imgPath = 'images/apotato.png'
     else
       @getImgur params['ver'], (path) ->
         if path != null

@@ -96,7 +96,7 @@
       var params;
       params = this.getParam(param);
       if (params['ver'] === 'achiku-potato') {
-        return cb(this.imgPath = '/images/apotato.png');
+        return cb(this.imgPath = 'images/apotato.png');
       } else {
         return this.getImgur(params['ver'], function(path) {
           if (path !== null) {

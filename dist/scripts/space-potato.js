@@ -269,6 +269,7 @@
     };
 
     App.prototype.onClickAppShareBtn = function() {
+      this.exportImgPath = this.stage.toDataURL('image/jpg');
       this.$appView.css('display', 'block');
       this.$appConfirm.css('display', 'block');
       return this.$shareModalView.fadeIn(100);
@@ -281,10 +282,16 @@
       img = this.imgPath.split(',')[1];
       return this.postImgur(img, (function(_this) {
         return function(url) {
-          var hash, path;
+          var hash, path, stageImg;
           path = url.replace('http://i.imgur.com/', '');
           hash = path.split('.')[0];
-          return window.location = 'https://twitter.com/intent/tweet?url=http://ideyuta.com/space-potato/?ver=' + hash + '&via=_space_potato';
+          stageImg = _this.exportImgPath.split(',')[1];
+          return _this.postImgur(stageImg, function(url) {
+            _this.$shareModalView.css('display', 'none');
+            _this.$imgLoading.css('display', 'none');
+            url = url.replace(/.jpg/, '');
+            return window.location = 'https://twitter.com/intent/tweet?url=' + url + '&text=http://ideyuta.com/space-potato/?ver=' + hash + '&via=_space_potato';
+          });
         };
       })(this));
     };

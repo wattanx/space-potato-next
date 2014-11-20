@@ -213,6 +213,7 @@ class App
 
   # APP SHARE
   onClickAppShareBtn: =>
+    @exportImgPath = @stage.toDataURL('image/jpg')
     @$appView.css 'display', 'block'
     @$appConfirm.css 'display', 'block'
     @$shareModalView.fadeIn 100
@@ -224,7 +225,12 @@ class App
     @postImgur img, (url) =>
       path = url.replace 'http://i.imgur.com/', ''
       hash = path.split('.')[0]
-      window.location = 'https://twitter.com/intent/tweet?url=http://ideyuta.com/space-potato/?ver='+hash+'&via=_space_potato'
+      stageImg = @exportImgPath.split(',')[1]
+      @postImgur stageImg, (url) =>
+        @$shareModalView.css 'display', 'none'
+        @$imgLoading.css 'display', 'none'
+        url = url.replace /.jpg/, ''
+        window.location = 'https://twitter.com/intent/tweet?url='+url+'&text=http://ideyuta.com/space-potato/?ver='+hash+'&via=_space_potato'
 
   # IMAGE SHARE
   onClickCaptureBtn: =>

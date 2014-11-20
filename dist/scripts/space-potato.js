@@ -40,19 +40,19 @@
       this.$imgView = $('[data-app=imgView]');
       this.$appShareBtn = $('[data-app=appShareBtn]');
       this.$appTweetBtn = $('[data-app=appTweetBtn]');
-      this.$appShareBtn.on('click', this.onClickAppShareBtn);
+      this.$appShareBtn.on('click', this.onClickAppShareBtn).css('cursor', 'pointer');
       this.$appConfirm = this.$appView.find('[data-app=confirm]');
       this.$appLoading = this.$appView.find('[data-app=loading]');
-      this.$appTweetBtn.on('click', this.onClickAppTweetBtn);
+      this.$appTweetBtn.on('click', this.onClickAppTweetBtn).css('cursor', 'pointer');
       this.$captureBtn = $('[data-app=captureBtn]');
       this.$imgConfirm = this.$imgView.find('[data-app=confirm]');
       this.$imgLoading = this.$imgView.find('[data-app=loading]');
       this.$thumb = $('[data-app=thumb]');
       this.$imgTweetBtn = $('[data-app=imgTweetBtn]');
       this.inputFile.addEventListener('change', this.changeImage);
-      this.$captureBtn.on('click', this.onClickCaptureBtn);
-      this.$shareModalView.on('click', this.onClickShareModalView);
-      this.$imgTweetBtn.on('click', this.onClickImgTweetBtn);
+      this.$captureBtn.on('click', this.onClickCaptureBtn).css('cursor', 'pointer');
+      this.$shareModalView.on('click', this.onClickShareModalView).css('cursor', 'pointer');
+      this.$imgTweetBtn.on('click', this.onClickImgTweetBtn).css('cursor', 'pointer');
       this.setBgImg((function(_this) {
         return function() {
           var param;

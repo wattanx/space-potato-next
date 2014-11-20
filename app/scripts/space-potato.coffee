@@ -32,9 +32,11 @@ class App
     @$appShareBtn = $('[data-app=appShareBtn]')
     @$appTweetBtn = $('[data-app=appTweetBtn]')
     @$appShareBtn.on 'click', @onClickAppShareBtn
+      .css 'cursor','pointer'
     @$appConfirm = @$appView.find('[data-app=confirm]')
     @$appLoading = @$appView.find('[data-app=loading]')
     @$appTweetBtn.on 'click', @onClickAppTweetBtn
+      .css 'cursor','pointer'
 
     # IMAGE SHARE
     @$captureBtn = $('[data-app=captureBtn]')
@@ -44,8 +46,11 @@ class App
     @$imgTweetBtn = $('[data-app=imgTweetBtn]')
     @inputFile.addEventListener 'change', @changeImage
     @$captureBtn.on 'click', @onClickCaptureBtn
+      .css 'cursor','pointer'
     @$shareModalView.on 'click', @onClickShareModalView
+      .css 'cursor','pointer'
     @$imgTweetBtn.on 'click', @onClickImgTweetBtn
+      .css 'cursor','pointer'
 
     @setBgImg () =>
       @stage.addChild @bgImg

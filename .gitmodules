@@ -1,4 +1,0 @@
-[submodule "app/components/zenigame"]
-	path = app/components/zenigame
-	url = git@github.com:ideyuta/zenigame.git
-	branch = super-zenigame

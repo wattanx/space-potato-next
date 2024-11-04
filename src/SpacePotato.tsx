@@ -18,6 +18,7 @@ interface PotatoSprite {
   rotation: number;
   ctx: CanvasRenderingContext2D;
   img: HTMLImageElement;
+  setScale(scale: number): void;
 }
 
 class PotatoSprite {
@@ -37,18 +38,27 @@ class PotatoSprite {
     this.w = w;
     this.h = h;
     this.scale = scale;
-    this.radius = (Math.max(w, h) * scale) / 2;
-    this.distance = this.radius + this.scale;
+    this.updateRadius();
     // Reduced speed values
-    this.vx = (Math.floor(Math.random() * 4) + 1) * 0.5; // Halved the speed
-    this.vy = (Math.floor(Math.random() * 2) + 1) * 0.5; // Halved the speed
+    this.vx = (Math.floor(Math.random() * 2) + 1) * 0.5;
+    this.vy = (Math.floor(Math.random() * 1) + 1) * 0.5;
     this.rotation = 0;
+  }
+
+  setScale(scale: number): void {
+    this.scale = scale;
+    this.updateRadius();
+  }
+
+  private updateRadius(): void {
+    this.radius = (Math.max(this.w, this.h) * this.scale) / 2;
+    this.distance = this.radius + this.scale;
   }
 
   update(canvasWidth: number, canvasHeight: number): void {
     this.x += this.vx;
     this.y += this.vy;
-    this.rotation += 0.5; // Reduced rotation speed
+    this.rotation += 0.5;
     this.wallHit(canvasWidth, canvasHeight);
   }
 
@@ -134,7 +144,7 @@ export const SpacePotato: React.FC = () => {
 
     // Load background image
     const bgImg = new Image();
-    bgImg.src = BG_IMAGE_PATH; // Replace with actual background image
+    bgImg.src = BG_IMAGE_PATH;
     bgImg.onload = () => {
       bgImageRef.current = bgImg;
       initializeBackground();
@@ -142,11 +152,11 @@ export const SpacePotato: React.FC = () => {
 
     // Load potato image
     const potatoImg = new Image();
-    potatoImg.src = IMAGE_PATH; // Replace with actual potato image
+    potatoImg.src = IMAGE_PATH;
     potatoImg.onload = () => {
       potatoImageRef.current = potatoImg;
       setIsLoading(false);
-      addPotato(0, 0);
+      addPotato(window.innerWidth / 1.2, window.innerHeight / 1.2, 1);
     };
 
     const handleResize = (): void => {
@@ -180,11 +190,10 @@ export const SpacePotato: React.FC = () => {
     }
   };
 
-  const addPotato = (x: number, y: number): void => {
+  const addPotato = (x: number, y: number, initialScale: number) => {
     if (!potatoImageRef.current || !ctxRef.current) return;
 
-    const newScale = scale / 1.2;
-    setScale(newScale);
+    const newScale = initialScale / 1.2;
 
     const potato = new PotatoSprite(
       ctxRef.current,
@@ -197,6 +206,7 @@ export const SpacePotato: React.FC = () => {
     );
 
     potatoesRef.current.push(potato);
+    return potato;
   };
 
   const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>): void => {
@@ -209,12 +219,18 @@ export const SpacePotato: React.FC = () => {
 
     for (const potato of potatoesRef.current) {
       if (potato.containsPoint(x, y)) {
-        addPotato(x, y);
+        // 新しいスケールを計算
+        const newScale = potato.scale / 1.2;
+        // クリックされた potato のスケールを更新
+        potato.setScale(newScale);
+        // 同じ位置に新しい potato を追加
+        addPotato(x, y, newScale);
         break;
       }
     }
   };
 
+  // TODO
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
@@ -223,12 +239,13 @@ export const SpacePotato: React.FC = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const newImg = new Image();
+        // @ts-expect-error
         newImg.src = e.target.result as string;
         newImg.onload = () => {
           potatoImageRef.current = newImg;
           potatoesRef.current = [];
           setScale(1);
-          addPotato(0, 0);
+          addPotato(window.innerWidth / 2, window.innerHeight / 2, 1);
         };
       };
       reader.readAsDataURL(file);

@@ -127,8 +127,12 @@ export const SpacePotato: React.FC = () => {
   const potatoImageRef = useRef<HTMLImageElement | null>(null);
   const potatoesRef = useRef<PotatoSprite[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // @ts-expect-error
   const fileInputRef = useRef<HTMLInputElement>(null);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
+
+  // @ts-expect-error
   const [scale, setScale] = useState<number>(1);
 
   useEffect(() => {
@@ -230,7 +234,7 @@ export const SpacePotato: React.FC = () => {
     }
   };
 
-  // TODO
+  // @ts-expect-error
   const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {

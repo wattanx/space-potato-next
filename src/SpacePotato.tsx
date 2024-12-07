@@ -40,8 +40,8 @@ class PotatoSprite {
     this.scale = scale;
     this.updateRadius();
     // Reduced speed values
-    this.vx = (Math.floor(Math.random() * 2) + 1) * 0.5;
-    this.vy = (Math.floor(Math.random() * 1) + 1) * 0.5;
+    this.vx = Math.floor(Math.random() * 16) + 1;
+    this.vy = Math.floor(Math.random() * 8) + 1;
     this.rotation = 0;
   }
 
@@ -58,7 +58,7 @@ class PotatoSprite {
   update(canvasWidth: number, canvasHeight: number): void {
     this.x += this.vx;
     this.y += this.vy;
-    this.rotation += 0.5;
+    this.rotation++;
     this.wallHit(canvasWidth, canvasHeight);
   }
 

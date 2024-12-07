@@ -160,7 +160,20 @@ export const SpacePotato: React.FC = () => {
     potatoImg.onload = () => {
       potatoImageRef.current = potatoImg;
       setIsLoading(false);
-      addPotato(window.innerWidth / 1.2, window.innerHeight / 1.2, 1);
+      const maxSize = Math.max(
+        potatoImageRef.current.width,
+        potatoImageRef.current.height
+      );
+      const imageScale =
+        maxSize <= 600
+          ? maxSize / 600
+          : 600 /
+            Math.max(
+              potatoImageRef.current.width,
+              potatoImageRef.current.height
+            );
+      const scale = Math.min(1, window.innerWidth / 1000) * imageScale;
+      addPotato(window.innerWidth / 1.2, window.innerHeight / 1.2, scale);
     };
 
     const handleResize = (): void => {
